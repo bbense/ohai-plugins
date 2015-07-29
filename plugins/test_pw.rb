@@ -8,7 +8,7 @@ require 'etc'
     str
   end
 
-  def parse_password_line(line,mash)
+  def parse_passwd_line(line,mash)
     line.chomp!
     if line.chr == '+' 
       parse_netgroup_line(line,mash)
@@ -109,13 +109,13 @@ require 'etc'
     
       File.open("/etc/passwd", "r") do |f|
        f.each_line do |line|
-          found = parse_passwd_line(line,etc)
+          parse_passwd_line(line,etc)
         end
       end
 
       File.open("/etc/group", "r") do |f|
         f.each_line do |line|
-          found = parse_group_line(line,etc)
+          parse_group_line(line,etc)
         end
       end
 
