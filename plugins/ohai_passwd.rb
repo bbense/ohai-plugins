@@ -110,13 +110,13 @@ Ohai.plugin(:PasswdMin) do
 
       File.open("/etc/passwd", "r") do |f|
        f.each_line do |line|
-          etc = parse_passwd_line(line,etc)
+          self.parse_passwd_line(line,etc)
         end
       end
 
       File.open("/etc/group", "r") do |f|
         f.each_line do |line|
-          etc = parse_group_line(line,etc)
+          self.parse_group_line(line,etc)
         end
       end
 
