@@ -64,9 +64,15 @@ require 'etc'
   end 
 
   def set_if(hash,atom,value)
-    if value.length > 0 
-      hash[atom] = value
-    end 
+    if value.respond_to?(:length)
+      if value.length > 0 
+        hash[atom] = value
+      end 
+    else
+      if value >= 0 
+        hash[atom] = value
+      end 
+    end  
   end
   
   def set_if_not(hash,atom,value)
