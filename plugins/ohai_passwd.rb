@@ -17,6 +17,7 @@ Ohai.plugin(:PasswdMin) do
       entry = parse_pw_line(line)
       etc[:passwd][entry[:name]] = entry.except(:name) unless etc[:passwd].has_key?(entry[:name])
     end 
+    etc
   end 
 
   def parse_netgroup_line(line,etc)
@@ -45,7 +46,7 @@ Ohai.plugin(:PasswdMin) do
         etc[:passwd][entry[:name]] = entry.except(:name) unless etc[:passwd].has_key?(entry[:name])
       end
     end
-  end 
+  end
 
   def parse_pw_line(line)
     entry = Mash.new
@@ -109,13 +110,13 @@ Ohai.plugin(:PasswdMin) do
 
       File.open("/etc/passwd", "r") do |f|
        f.each_line do |line|
-          parse_passwd_line(line,etc)
+          etc = parse_passwd_line(line,etc)
         end
       end
 
       File.open("/etc/group", "r") do |f|
         f.each_line do |line|
-          parse_group_line(line,etc)
+          etc = parse_group_line(line,etc)
         end
       end
 
