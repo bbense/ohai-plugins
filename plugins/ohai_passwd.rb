@@ -9,32 +9,32 @@ Ohai.plugin(:PasswdMin) do
     str
   end
 
-  def parse_password_line(line,etc) 
+  def parse_password_line(line,mash) 
     line.chomp!
     if line.chr == '+' 
-      parse_netgroup_line(line,etc)
+      parse_netgroup_line(line,mash)
     else
       entry = parse_pw_line(line)
-      etc[:passwd][entry[:name]] = entry.except(:name) unless etc[:passwd].has_key?(entry[:name])
+      mash[:passwd][entry[:name]] = entry.except(:name) unless mash[:passwd].has_key?(entry[:name])
     end 
-    etc
+    mash
   end 
 
-  def parse_netgroup_line(line,etc)
+  def parse_netgroup_line(line,mash)
     pw_line = line[1..-1]
     entry = parse_pw_line(line)
     if( entry[:name].nil? )
       if( entry[:shell] )   
-        #+:::::/afs/slac.stanford.edu/common/etc/use-NOT
-        etc[:netgroup]['all'] = entry[:shell]
+        #+:::::/afs/slac.stanford.edu/common/mash/use-NOT
+        mash[:netgroup]['all'] = entry[:shell]
       else
         #+
-        etc[:netgroup]['all'] = 'allowed'
+        mash[:netgroup]['all'] = 'allowed'
       end
     else 
       if entry[:name].chr == '@'
         #+@netgroup
-        etc[:netgroup][entry[:name][1..-1]] = 'allowed'
+        mash[:netgroup][entry[:name][1..-1]] = 'allowed'
       else
         #+user
         nis = Etc.getpwnam(entry[:name])
@@ -43,7 +43,7 @@ Ohai.plugin(:PasswdMin) do
         set_if_not(entry, :gecos, nis.gecos)
         set_if_not(entry, :dir, nis.dir)
         set_if_not(entry, :shell, nis.shell)
-        etc[:passwd][entry[:name]] = entry.except(:name) unless etc[:passwd].has_key?(entry[:name])
+        mash[:passwd][entry[:name]] = entry.except(:name) unless mash[:passwd].has_key?(entry[:name])
       end
     end
   end
@@ -108,15 +108,16 @@ Ohai.plugin(:PasswdMin) do
       etc[:group] = Mash.new
       etc[:netgroups] = Mash.new
 
+      mash = etc
       File.open("/etc/passwd", "r") do |f|
        f.each_line do |line|
-          self.parse_passwd_line(line,etc)
+          self.parse_passwd_line(line,mash)
         end
       end
 
       File.open("/etc/group", "r") do |f|
         f.each_line do |line|
-          self.parse_group_line(line,etc)
+          self.parse_group_line(line,mash)
         end
       end
 
