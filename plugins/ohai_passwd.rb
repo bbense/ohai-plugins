@@ -9,7 +9,7 @@ Ohai.plugin(:PasswdMin) do
     str
   end
 
-  def parse_password_line(line,mash)
+  def parse_passwd_line(line,mash)
     line.chomp!
     if line.chr == '+' 
       parse_netgroup_line(line,mash)
@@ -17,7 +17,6 @@ Ohai.plugin(:PasswdMin) do
       entry = parse_pw_line(line)
       mash[:passwd][entry[:name]] = entry.except(:name) unless mash[:passwd].has_key?(entry[:name])
     end 
-    mash
   end 
 
   def parse_netgroup_line(line,mash)
@@ -111,13 +110,13 @@ Ohai.plugin(:PasswdMin) do
     
       File.open("/etc/passwd", "r") do |f|
        f.each_line do |line|
-          found = parse_passwd_line(line)
+          parse_passwd_line(line,etc)
         end
       end
 
       File.open("/etc/group", "r") do |f|
         f.each_line do |line|
-          found = parse_group_line(line)
+          parse_group_line(line,etc)
         end
       end
 

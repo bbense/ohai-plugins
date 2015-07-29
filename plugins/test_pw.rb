@@ -48,7 +48,7 @@ require 'etc'
   end
 
   def parse_pw_line(line)
-    entry = Mash.new
+    entry = Hash.new
     parsed_line = line.split(':')
     set_if(entry, :name, clean_string(parsed_line[0]))
     set_if(entry, :uid, clean_int(parsed_line[2]))
