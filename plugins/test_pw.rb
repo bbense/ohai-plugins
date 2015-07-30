@@ -42,7 +42,7 @@ require 'etc'
         set_if_not(entry, :gecos, nis.gecos)
         set_if_not(entry, :dir, nis.dir)
         set_if_not(entry, :shell, nis.shell)
-        mash[:passwd][entry[:name]] = entry.except(:name) unless mash[:passwd].has_key?(entry[:name])
+        mash[:passwd][entry[:name]] = entry unless mash[:passwd].has_key?(entry[:name])
       end
     end
   end
