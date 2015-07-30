@@ -21,7 +21,7 @@ require 'etc'
 
   def parse_netgroup_line(line,mash)
     pw_line = line[1..-1]
-    entry = parse_pw_line(line)
+    entry = parse_pw_line(pw_line)
     if( entry[:name].nil? )
       if( entry[:shell] )   
         #+:::::/afs/slac.stanford.edu/common/etc/use-NOT
