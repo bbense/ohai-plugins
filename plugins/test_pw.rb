@@ -14,7 +14,7 @@ require 'etc'
       parse_netgroup_line(line,mash)
     else
       entry = parse_pw_line(line)
-      mash[:passwd][entry[:name]] = entry.except(:name) unless mash[:passwd].has_key?(entry[:name])
+      mash[:passwd][entry[:name]] = entry unless mash[:passwd].has_key?(entry[:name])
     end 
     mash
   end 
