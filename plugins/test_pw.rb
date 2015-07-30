@@ -25,15 +25,15 @@ require 'etc'
     if( entry[:name].nil? )
       if( entry[:shell] )   
         #+:::::/afs/slac.stanford.edu/common/etc/use-NOT
-        mash[:netgroup]['all'] = entry[:shell]
+        mash[:netgroups]['all'] = entry[:shell]
       else
         #+
-        mash[:netgroup]['all'] = 'allowed'
+        mash[:netgroups]['all'] = 'allowed'
       end
     else 
       if entry[:name].chr == '@'
         #+@netgroup
-        mash[:netgroup][entry[:name][1..-1]] = 'allowed'
+        mash[:netgroups][entry[:name][1..-1]] = 'allowed'
       else
         #+user
         nis = Etc.getpwnam(entry[:name])
