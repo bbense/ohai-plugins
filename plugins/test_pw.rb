@@ -59,8 +59,20 @@ require 'etc'
     entry
   end 
 
-  def parse_group_line(line,etc)
-    true 
+  def parse_group_line(line,mash)
+    line.chomp!
+    if line.chr == '#'
+      return 
+    end
+    if line.chr == '+'
+      mash[:group][:uses_netgroup] = 'true'
+    end 
+    entry = Hash.new
+    parsed_line = line.split(':')
+    name = fix_encoding(parsed_line[0])
+    entry[:gid] = parsed_line[2].to_i
+    entry[:members] = parsed_line[3].to_s.split(",").map { |u| fix_encoding(u) }
+    mash[:group][name] = entry
   end 
 
   def set_if(hash,atom,value)
