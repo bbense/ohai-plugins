@@ -66,6 +66,7 @@ require 'etc'
     end
     if line.chr == '+'
       mash[:group][:uses_netgroup] = 'true'
+      return
     end 
     entry = Hash.new
     parsed_line = line.split(':')
@@ -137,6 +138,6 @@ require 'etc'
         end
       end
 
-
+puts "etc is ready\n"
 
 
