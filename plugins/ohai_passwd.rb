@@ -26,15 +26,15 @@ Ohai.plugin(:PasswdMin) do
     if( entry[:name].nil? )
       if( entry[:shell] )   
         #+:::::/afs/slac.stanford.edu/common/mash/use-NOT
-        mash[:netgroup]['all'] = entry[:shell]
+        mash[:netgroups]['all'] = entry[:shell]
       else
         #+
-        mash[:netgroup]['all'] = 'allowed'
+        mash[:netgroups]['all'] = 'allowed'
       end
     else 
       if entry[:name].chr == '@'
         #+@netgroup
-        mash[:netgroup][entry[:name][1..-1]] = 'allowed'
+        mash[:netgroups][entry[:name][1..-1]] = 'allowed'
       else
         #+user
         nis = Etc.getpwnam(entry[:name])
@@ -129,8 +129,10 @@ Ohai.plugin(:PasswdMin) do
 
     
       File.open("/etc/passwd", "r") do |f|
-       f.each_line do |line|
+        f.each_line do |line|
+          Ohai::Log.debug("parsing #{line}")
           parse_passwd_line(line,etc)
+          Ohai::Log.debug("found #{etc[:passwd].keys}")
         end
       end
 
