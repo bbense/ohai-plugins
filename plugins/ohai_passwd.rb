@@ -121,22 +121,22 @@ Ohai.plugin(:PasswdMin) do
 
   collect_data do
     unless etc
-      gather = Mash.new
+      etc Mash.new
 
-      gather[:passwd] = Mash.new
-      gather[:group] = Mash.new
-      gather[:netgroups] = Mash.new
+      etc[:passwd] = Mash.new
+      etc[:group] = Mash.new
+      etc[:netgroups] = Mash.new
 
     
       File.open("/etc/passwd", "r") do |f|
        f.each_line do |line|
-          parse_passwd_line(line,gather)
+          parse_passwd_line(line,etc)
         end
       end
 
       File.open("/etc/group", "r") do |f|
         f.each_line do |line|
-          parse_group_line(line,gather)
+          parse_group_line(line,etc)
         end
       end
 
@@ -152,7 +152,7 @@ Ohai.plugin(:PasswdMin) do
       #                          :members => entry.mem.map {|u| fix_encoding(u)})
       #   etc[:group][fix_encoding(entry.name)] = group_entry
       # end
-      etc gather
+      etc
     end
 
     unless current_user
