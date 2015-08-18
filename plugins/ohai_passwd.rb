@@ -9,32 +9,32 @@ Ohai.plugin(:PasswdMin) do
     str
   end
 
-  def parse_passwd_line(line,mash)
+  def parse_passwd_line(line)
     line.chomp!
     if line.chr == '+' 
-      parse_netgroup_line(line,mash)
+      parse_netgroup_line(line)
     else
       entry = parse_pw_line(line)
-      mash[:passwd][entry[:name]] = entry.except(:name) unless mash[:passwd].has_key?(entry[:name])
+      etc[:passwd][entry[:name]] = entry.except(:name) unless etc[:passwd].has_key?(entry[:name])
     end
-    mash
+    etc
   end 
 
-  def parse_netgroup_line(line,mash)
+  def parse_netgroup_line(line)
     pw_line = line[1..-1]
     entry = parse_pw_line(line)
     if( entry[:name].nil? )
       if( entry[:shell] )   
-        #+:::::/afs/slac.stanford.edu/common/mash/use-NOT
-        mash[:netgroups]['all'] = entry[:shell]
+        #+:::::/afs/slac.stanford.edu/common/etc/use-NOT
+        etc[:netgroups]['all'] = entry[:shell]
       else
         #+
-        mash[:netgroups]['all'] = 'allowed'
+        etc[:netgroups]['all'] = 'allowed'
       end
     else 
       if entry[:name].chr == '@'
         #+@netgroup
-        mash[:netgroups][entry[:name][1..-1]] = 'allowed'
+        etc[:netgroups][entry[:name][1..-1]] = 'allowed'
       else
         #+user
         nis = Etc.getpwnam(entry[:name])
@@ -43,7 +43,7 @@ Ohai.plugin(:PasswdMin) do
         set_if_not(entry, :gecos, nis.gecos)
         set_if_not(entry, :dir, nis.dir)
         set_if_not(entry, :shell, nis.shell)
-        mash[:passwd][entry[:name]] = entry.except(:name) unless mash[:passwd].has_key?(entry[:name])
+        etc[:passwd][entry[:name]] = entry.except(:name) unless etc[:passwd].has_key?(entry[:name])
       end
     end
   end
@@ -60,13 +60,13 @@ Ohai.plugin(:PasswdMin) do
     entry
   end 
 
-  def parse_group_line(line,mash)
+  def parse_group_line(line)
     line.chomp!
     if line.chr == '#'
       return 
     end
     if line.chr == '+'
-      mash[:group][:uses_netgroup] = 'true'
+      etc[:group][:uses_netgroup] = 'true'
       return
     end 
     entry = Mash.new
@@ -74,7 +74,7 @@ Ohai.plugin(:PasswdMin) do
     name = fix_encoding(parsed_line[0])
     entry[:gid] = parsed_line[2].to_i
     entry[:members] = parsed_line[3].to_s.split(",").map { |u| fix_encoding(u) }
-    mash[:group][name] = entry
+    etc[:group][name] = entry
   end 
 
   def set_if(hash,atom,value)
@@ -131,14 +131,14 @@ Ohai.plugin(:PasswdMin) do
       File.open("/etc/passwd", "r") do |f|
         f.each_line do |line|
           Ohai::Log.debug("parsing #{line}")
-          parse_passwd_line(line,etc)
+          parse_passwd_line(line)
           Ohai::Log.debug("found #{etc[:passwd].keys}")
         end
       end
 
       File.open("/etc/group", "r") do |f|
         f.each_line do |line|
-          parse_group_line(line,etc)
+          parse_group_line(line)
         end
       end
 
