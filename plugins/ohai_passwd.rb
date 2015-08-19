@@ -14,7 +14,9 @@ Ohai.plugin(:PasswdMin) do
       parse_netgroup_line(line)
     else
       entry = parse_pw_line(line)
-      {:passwd => [entry[:name] , entry.except(:name)] }
+      name = entry[:name]
+      entry.delete(:name)
+      {:passwd => [name , entry ] }
     end
   end 
 
