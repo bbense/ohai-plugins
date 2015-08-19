@@ -1,4 +1,3 @@
-
 require 'etc'
 
 Ohai.plugin(:PasswdMin) do
@@ -119,7 +118,7 @@ Ohai.plugin(:PasswdMin) do
   end
 
   collect_data do
-    unless etc
+
       etc Mash.new
 
       etc[:passwd] = Mash.new
@@ -129,7 +128,7 @@ Ohai.plugin(:PasswdMin) do
      
       File.open("/etc/passwd", "r") do |f|
         f.each_line do |line|
-          puts("parsing #{line}")
+        ("parsing #{line}")
           entry = parse_passwd_line(line)
           puts("found #{entry.keys}")
           if entry[:passwd]
@@ -157,8 +156,7 @@ Ohai.plugin(:PasswdMin) do
       #                          :members => entry.mem.map {|u| fix_encoding(u)})
       #   etc[:group][fix_encoding(entry.name)] = group_entry
       # end
-      etc
-    end
+    
 
     unless current_user
       current_user fix_encoding(Etc.getpwuid(Process.euid).name)
