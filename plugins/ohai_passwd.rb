@@ -131,7 +131,7 @@ Ohai.plugin(:PasswdMin) do
       File.open("/etc/passwd", "r") do |f|
          f.each_line do |line|
           entry = parse_passwd_line(line)
-          binding.pry:
+          binding.pry
           if entry[:passwd]
             name = entry[:passwd][0]
             etc[:passwd][name] = entry[:passwd][1]
