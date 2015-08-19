@@ -1,6 +1,5 @@
 
 require 'etc'
-require 'pry'
 
 Ohai.plugin(:PasswdMin) do
   provides 'etc', 'current_user'
@@ -130,10 +129,9 @@ Ohai.plugin(:PasswdMin) do
      
       File.open("/etc/passwd", "r") do |f|
         f.each_line do |line|
-          Ohai::Log.debug("parsing #{line}")
+          puts("parsing #{line}")
           entry = parse_passwd_line(line)
-          binding.pry 
-          Ohai::Log.debug("found #{entry.keys}")
+          puts("found #{entry.keys}")
           if entry[:passwd]
            name = entry[:passwd][0]
            etc[:passwd][name] = entry[:passwd][1]
