@@ -22,14 +22,14 @@ Ohai.plugin(:PasswdMin) do
 
   def parse_netgroup_line(line)
     pw_line = line[1..-1]
-    entry = parse_pw_line(line)
+    entry = parse_pw_line(pw_line)
     if( entry[:name].nil? )
       if( entry[:shell] )   
         #+:::::/afs/slac.stanford.edu/common/etc/use-NOT
-        etc[:netgroups]['all'] = entry[:shell]
+        etc[:netgroups][:all] = entry[:shell]
       else
         #+
-        etc[:netgroups]['all'] = 'allowed'
+        etc[:netgroups][:all] = 'allowed'
       end
     else 
       if entry[:name].chr == '@'
@@ -130,8 +130,6 @@ Ohai.plugin(:PasswdMin) do
       etc[:group] = Mash.new
       etc[:netgroups] = Mash.new
 
-     
-      #etc[:passwd]['bbense'] = Mash.new( :uid => 227 )
       File.open("/etc/passwd", "r") do |f|
          f.each_line do |line|
           parse_passwd_line(line)
