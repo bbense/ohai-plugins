@@ -1,5 +1,6 @@
 
 require 'etc'
+require 'pry'
 
 Ohai.plugin(:PasswdMin) do
   provides 'etc', 'current_user'
@@ -15,7 +16,7 @@ Ohai.plugin(:PasswdMin) do
       parse_netgroup_line(line)
     else
       entry = parse_pw_line(line)
-      {:passwd => {entry[:name] => entry.except(:name)}}
+      {:passwd => [entry[:name] , entry.except(:name)] }
     end
   end 
 
@@ -126,15 +127,17 @@ Ohai.plugin(:PasswdMin) do
       etc[:group] = Mash.new
       etc[:netgroups] = Mash.new
 
-    
+     
       File.open("/etc/passwd", "r") do |f|
         f.each_line do |line|
           Ohai::Log.debug("parsing #{line}")
           entry = parse_passwd_line(line)
+          binding.pry 
           Ohai::Log.debug("found #{entry.keys}")
-           
-          etc[:passwd].merge!(entry[:passwd])
-          
+          if entry[:passwd]
+           name = entry[:passwd][0]
+           etc[:passwd][name] = entry[:passwd][1]
+          end 
         end
       end
 
