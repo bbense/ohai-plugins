@@ -16,7 +16,7 @@ Ohai.plugin(:PasswdMin) do
       entry = parse_pw_line(line)
       name = entry[:name]
       entry.delete(:name)
-      {:passwd => [name , entry ] }
+      etc[:passwd][name] = entry
     end
   end 
 
@@ -43,7 +43,9 @@ Ohai.plugin(:PasswdMin) do
         set_if_not(entry, :gecos, nis.gecos)
         set_if_not(entry, :dir, nis.dir)
         set_if_not(entry, :shell, nis.shell)
-        etc[:passwd][entry[:name]] = entry.except(:name) unless etc[:passwd].has_key?(entry[:name])
+        name = entry[:name]
+        entry.delete(:name)
+        etc[:passwd][name] = entry
       end
     end
   end
@@ -132,20 +134,15 @@ Ohai.plugin(:PasswdMin) do
       #etc[:passwd]['bbense'] = Mash.new( :uid => 227 )
       File.open("/etc/passwd", "r") do |f|
          f.each_line do |line|
-          entry = parse_passwd_line(line)
-          binding.pry
-          if entry[:passwd]
-            name = entry[:passwd][0]
-            etc[:passwd][name] = entry[:passwd][1]
-          end 
+          parse_passwd_line(line)
          end
       end
 
-      # File.open("/etc/group", "r") do |f|
-      #   f.each_line do |line|
-      #     parse_group_line(line)
-      #   end
-      # end
+      File.open("/etc/group", "r") do |f|
+         f.each_line do |line|
+           parse_group_line(line)
+         end
+      end
 
       # Etc.passwd do |entry|
       #   user_passwd_entry = Mash.new(:dir => entry.dir, :gid => entry.gid, :uid => entry.uid, :shell => entry.shell, :gecos => entry.gecos)
