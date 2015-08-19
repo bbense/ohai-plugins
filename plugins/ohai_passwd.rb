@@ -126,23 +126,24 @@ Ohai.plugin(:PasswdMin) do
       etc[:netgroups] = Mash.new
 
      
-      File.open("/etc/passwd", "r") do |f|
-        f.each_line do |line|
-        ("parsing #{line}")
-          entry = parse_passwd_line(line)
-          puts("found #{entry.keys}")
-          if entry[:passwd]
-           name = entry[:passwd][0]
-           etc[:passwd][name] = entry[:passwd][1]
-          end 
-        end
-      end
+      etc[:passwd]['bbense'] = Mash.new( :uid => 227 )
+      # File.open("/etc/passwd", "r") do |f|
+      #   f.each_line do |line|
+      #   ("parsing #{line}")
+      #     entry = parse_passwd_line(line)
+      #     puts("found #{entry.keys}")
+      #     if entry[:passwd]
+      #      name = entry[:passwd][0]
+      #      etc[:passwd][name] = entry[:passwd][1]
+      #     end 
+      #   end
+      # end
 
-      File.open("/etc/group", "r") do |f|
-        f.each_line do |line|
-          parse_group_line(line)
-        end
-      end
+      # File.open("/etc/group", "r") do |f|
+      #   f.each_line do |line|
+      #     parse_group_line(line)
+      #   end
+      # end
 
       # Etc.passwd do |entry|
       #   user_passwd_entry = Mash.new(:dir => entry.dir, :gid => entry.gid, :uid => entry.uid, :shell => entry.shell, :gecos => entry.gecos)
