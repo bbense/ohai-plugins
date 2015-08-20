@@ -72,7 +72,7 @@ Ohai.plugin(:PasswdMin) do
       return 
     end
     if line.chr == '+'
-      etc[:group][:uses_netgroup] = 'true'
+      etc[:group][:uses_nis] = 'true'
       return
     end 
     entry = Mash.new
